@@ -7,20 +7,12 @@ class ChatBar extends Component {
 
     this.state = {
       content: '',
-      error: '',
-      }
+    }
 
     // this.onCompose = this.onCompose.bind(this);
     this.onContent = this.onContent.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
   }
-
-  // onCompose(event) {
-  //   this.setState((prev, props) => ({
-  //     content: '',
-  //     error: '',
-  //   }));
-  // }
 
   // passed to onChange, puts the content in the 'this.state.content'
   onContent(event) {
@@ -30,25 +22,21 @@ class ChatBar extends Component {
   }
 
   handleKeyPress = (event) => { // like Karl's onPost
-    const state = {
-      error: ''
-    };
     if(event.key == 'Enter'){
-      console.log('enter press here! ')
       this.props.onMessage(this.state.content);
       // now that the content is sent to onNewMessage in App.jsx,
       // we can then clear state.content
-      state.content = '';
-
+      this.setState({ content: '' });
     }
-    this.setState(state);
+
   }
 
   render() {
     console.log("Rendering <ChatBar/>");
     return (
       <footer className="chatbar">
-        <input className="chatbar-username" placeholder={`${ this.props.currentUser.name }`} />
+        <input className="chatbar-username"
+          placeholder={`${ this.props.currentUser.name }`} />
         <input
           className="chatbar-message"
           placeholder="Type a message and hit ENTER"

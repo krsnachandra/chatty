@@ -20,12 +20,28 @@ wss.on('connection', (socket) => {
   console.log('Client connected');
   clients.push(socket);
   socket.on('message', function incoming(message) {
-    const parsedMessage = JSON.parse(message);
+    let parsedMessage;
+    // making the newMessage more secure
+    try{
+      parsedMessage = JSON.parse(message);
+    } catch(error) {
+      console.error(error);
+      return;
+    }
+    if (parsedMessage == null || typeof parsedMessage !== 'object') {
+      console.error('Message is not an object');
+      return;
+    }
+    const newMessage = {
+      username: String(parsedMessage.username),
+      content: String(parsedMessage.content),
+      id: Math.random()
+    }
     console.log(parsedMessage.username, 'said', parsedMessage.content);
 
     clients.forEach((client) => {
       if (client.readyState == ws.OPEN) {
-        client.send(message);
+        client.send(JSON.stringify(newMessage));
       }
     });
   });
