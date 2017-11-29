@@ -1,6 +1,26 @@
-var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
+const webpack = require('webpack');
+const WebpackDevServer = require('webpack-dev-server');
+const config = require('./webpack.config');
+
+// const WebSocket = require('ws');
+
+// const wss = new WebSocket.Server({ port: 3001 });
+// const clients = [];
+
+// wss.on('connection', function connection(ws) {
+//   cilents.push(ws);
+//   ws.on('message', function incoming(message) {
+//     console.log('received: %s', message);
+
+//     clients.forEach(client => {
+//       if (client.readyState == ws.OPEN) {
+//         client.send(message);
+//       }
+//     })
+//   });
+
+//   ws.send('welcome');
+// });
 
 new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,

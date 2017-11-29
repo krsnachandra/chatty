@@ -10,6 +10,9 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    this.socket = null;
+    // this.state = {messages: []};
+
     this.state = {
       currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [
@@ -24,31 +27,39 @@ class App extends Component {
       ]
     }
     this.onNewMessage = this.onNewMessage.bind(this);
-    // this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   componentDidMount() {
-    console.log("componentDidMount <App />");
-    setTimeout(() => {
-      console.log("Simulating incoming message");
-      // Add a new message to the list of messages in the data store
-      const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-      const messages = this.state.messages.concat(newMessage)
-      // Update the state of the app component.
-      // Calling setState will trigger a call to render() in App and all child components.
-      this.setState({messages})
-    }, 3000);
+    this.socket = new WebSocket('ws://localhost:3001');
+    console.log('Connected to server');
+
+    this.socket.addEventListener('message', (msg) => {
+      console.log(JSON.parse(msg.data));
+    const messages = this.state.messages.concat(JSON.parse(msg.data));
+    this.setState({messages});
+
+    })
+    // setTimeout(() => {
+    //   console.log("Simulating incoming message");
+    //   // Add a new message to the list of messages in the data store
+    //   const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
+    //   const messages = this.state.messages.concat(newMessage)
+    //   // Update the state of the app component.
+    //   // Calling setState will trigger a call to render() in App and all child components.
+    //   this.setState({messages})
+    // }, 3000);
   }
 
   onNewMessage(content) { // receives the content from the input in ChatBar
-    console.log(content);
-    // I think I need to make this a new message like above...
-    const messages = this.state.messages.concat({
+    const messageObj = {
       username: this.state.currentUser.name,
-      content
-    });
-    this.setState({messages});
-    // this.setState({content}).then(() => componentDidMount());
+      content: content
+    }
+
+    console.log(messageObj)
+    // console.log(username);
+    this.socket.send(JSON.stringify(messageObj));
   }
   // when receiving content, add to posts array
 
