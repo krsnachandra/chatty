@@ -43,7 +43,10 @@ class App extends Component {
   onNewMessage(content) { // receives the content from the input in ChatBar
     console.log(content);
     // I think I need to make this a new message like above...
-    const messages = this.state.messages.concat(content);
+    const messages = this.state.messages.concat({
+      username: this.state.currentUser.name,
+      content
+    });
     this.setState({messages});
     // this.setState({content}).then(() => componentDidMount());
   }
