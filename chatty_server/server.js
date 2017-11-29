@@ -1,5 +1,6 @@
 const express = require('express');
 const ws = require('ws');
+const uuidv1 = require('uuid/v1');
 
 // Set the port to 3001
 const PORT = 3001;
@@ -35,7 +36,10 @@ wss.on('connection', (socket) => {
     const newMessage = {
       username: String(parsedMessage.username),
       content: String(parsedMessage.content),
-      id: Math.random()
+      id: uuidv1()
+      // once things are getting saved to a db,
+      // I'd like to program defensively and detect cases where the GUID already exists.
+      // Recover, create a new GUID on the server side and try again
     }
     console.log(parsedMessage.username, 'said', parsedMessage.content);
 

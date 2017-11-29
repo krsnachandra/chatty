@@ -34,9 +34,6 @@ class App extends Component {
       username: this.state.currentUser.name,
       content: content
     }
-
-    console.log(messageObj)
-    // console.log(username);
     this.socket.send(JSON.stringify(messageObj));
   }
   // when receiving content, add to posts array
