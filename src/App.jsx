@@ -14,11 +14,12 @@ class App extends Component {
     // this.state = {messages: []};
 
     this.state = {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: 'Anonymous'},
       messages: []
     }
     this.onNewMessage = this.onNewMessage.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.onUsernameChange = this.onUsernameChange.bind(this);
   }
 
   componentDidMount() {
@@ -29,14 +30,27 @@ class App extends Component {
     })
   }
 
-  onNewMessage(content) { // receives the content from the input in ChatBar
+  // receives the content from the input in ChatBar
+  onNewMessage(content) {
     const messageObj = {
       username: this.state.currentUser.name,
-      content: content
+      content,
+      type: 'message'
     }
     this.socket.send(JSON.stringify(messageObj));
   }
   // when receiving content, add to posts array
+
+  onUsernameChange(newUsername) {
+    const systemMessage = {
+      content: `${this.state.currentUser.name} has changed their name to ${newUsername}`,
+      type: 'sysMessage'
+    }
+    this.socket.send(JSON.stringify(systemMessage));
+    this.setState({
+      currentUser: {name: newUsername}
+    })
+  }
 
 
   render() {
@@ -46,10 +60,11 @@ class App extends Component {
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
-        <MessageList messages={ this.state.messages }/>
+        <MessageList messages={this.state.messages}/>
         <ChatBar
-          currentUser={ this.state.currentUser}
-          onMessage={ this.onNewMessage } />
+          currentUser={this.state.currentUser}
+          onMessage={this.onNewMessage}
+          onUsernameChange= {this.onUsernameChange} />
       </div>
     );
   }

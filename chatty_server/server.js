@@ -33,15 +33,17 @@ wss.on('connection', (socket) => {
       console.error('Message is not an object');
       return;
     }
+
     const newMessage = {
+      id: uuidv1(),
       username: String(parsedMessage.username),
       content: String(parsedMessage.content),
-      id: uuidv1()
+      type: String(parsedMessage.type)
       // once things are getting saved to a db,
       // I'd like to program defensively and detect cases where the GUID already exists.
       // Recover, create a new GUID on the server side and try again
     }
-    console.log(parsedMessage.username, 'said', parsedMessage.content);
+    // console.log(parsedMessage.username, 'said', parsedMessage.content);
 
     clients.forEach((client) => {
       if (client.readyState == ws.OPEN) {

@@ -2,14 +2,22 @@ import React, { Component } from 'react';
 
 import Message from './Message.jsx';
 
+import Notification from './Notification.jsx';
+
 class MessageList extends Component {
   render() {
     console.log("Rendering <MessageList/>");
     const messages = this.props.messages.map((message) => {
-      return <Message
-        key={ message.id }
-        username={ message.username }
-        content={ message.content } />
+      if(message.type === 'sysMessage') {
+        return <Notification
+        key={message.id}
+        content={message.content} />
+      } else {
+        return <Message
+        key={message.id}
+        username={message.username}
+        content={message.content} />
+      }
     });
 
     return (
