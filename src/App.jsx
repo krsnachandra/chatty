@@ -4,6 +4,8 @@ import ChatBar from './ChatBar.jsx';
 
 import MessageList from './MessageList.jsx';
 
+import Nav from './Nav.jsx';
+
 
 class App extends Component {
 
@@ -15,7 +17,8 @@ class App extends Component {
 
     this.state = {
       currentUser: {name: 'Anonymous'},
-      messages: []
+      messages: [],
+      onlineUsers: 1
     }
     this.onNewMessage = this.onNewMessage.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -25,8 +28,18 @@ class App extends Component {
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001');
     this.socket.addEventListener('message', (msg) => {
-      const messages = this.state.messages.concat(JSON.parse(msg.data));
-      this.setState({messages});
+      const mess = JSON.parse(msg.data);
+      // console.log(mess);
+      // console.log('type', mess.type);
+      if(mess.type !== 'numberOfUsers') {
+        const messages = this.state.messages.concat(JSON.parse(msg.data));
+        this.setState({messages});
+      } else {
+        // const onlineUsers = this.state.onlineUsers.concat(JSON.parse(msg.data));
+        this.setState({onlineUsers: mess.content});
+        // console.log(this.state.onlineUsers);
+      }
+
     })
   }
 
@@ -57,9 +70,7 @@ class App extends Component {
     console.log("Rendering <App/>");
     return (
       <div>
-        <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty</a>
-        </nav>
+        <Nav onlineUsers={this.state.onlineUsers}/>
         <MessageList messages={this.state.messages}/>
         <ChatBar
           currentUser={this.state.currentUser}

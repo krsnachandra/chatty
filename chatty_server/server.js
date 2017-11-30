@@ -14,13 +14,40 @@ const server = express()
 // Create the WebSockets server
 const wss = new ws.Server({ server });
 const clients = [];
+
+
+// function broadcast(clients, newMessage) {
+//   clients.forEach((client) => {
+//       if (client.readyState == ws.OPEN) {
+//         client.send(JSON.stringify(newMessage));
+//       }
+//     });
+// }
+
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (socket) => {
   console.log('Client connected');
   clients.push(socket);
+
+  const numberOfUsers = {
+      id: uuidv1(),
+      content: String(wss.clients.size),
+      type: 'numberOfUsers'
+    }
+
+  clients.forEach((client) => {
+    if (client.readyState == ws.OPEN) {
+      client.send(JSON.stringify(numberOfUsers));
+    }
+  });
+
+  //socket.send('');
+  // broadcast(clients, {john:'MORE CLIENTS!', count: clients.length})
+
   socket.on('message', function incoming(message) {
+    // console.log('MESSAGE RECIEVED:', message);
     let parsedMessage;
     // making the newMessage more secure
     try{
@@ -39,17 +66,14 @@ wss.on('connection', (socket) => {
       username: String(parsedMessage.username),
       content: String(parsedMessage.content),
       type: String(parsedMessage.type)
-      // once things are getting saved to a db,
-      // I'd like to program defensively and detect cases where the GUID already exists.
-      // Recover, create a new GUID on the server side and try again
     }
-    // console.log(parsedMessage.username, 'said', parsedMessage.content);
-
+    // console.log(newMessage);
     clients.forEach((client) => {
       if (client.readyState == ws.OPEN) {
         client.send(JSON.stringify(newMessage));
       }
     });
+
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   socket.on('close', () => console.log('Client disconnected'));
