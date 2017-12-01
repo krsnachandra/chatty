@@ -32,7 +32,7 @@ class App extends Component {
       // console.log(mess);
       // console.log('type', mess.type);
       if(mess.type !== 'numberOfUsers') {
-        const messages = this.state.messages.concat(JSON.parse(msg.data));
+        const messages = this.state.messages.concat(mess);
         this.setState({messages});
       } else {
         // const onlineUsers = this.state.onlineUsers.concat(JSON.parse(msg.data));
@@ -42,6 +42,10 @@ class App extends Component {
 
     })
   }
+
+  // componentWillUpdate(nextProps, nextState) {
+  //   console.log('Will Update', this.state, nextState);
+  // }
 
   // receives the content from the input in ChatBar
   onNewMessage(content) {
