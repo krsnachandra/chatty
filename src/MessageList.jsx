@@ -20,30 +20,29 @@ import Notification from './Notification.jsx';
 //     });
 //     return (
 //       <main className="messages">
-//         { messages }
+//         {messages}
 //       </main>
 //     );
 //   }
 // }
 function MessageList({messages}){
-    const messageComps = messages.map((message) => {
-      if(message.type === 'sysMessage') {
-        return <Notification
-        key={message.id}
-        content={message.content} />
-      } else {
-        return <Message
-        key={message.id}
-        username={message.username}
-        content={message.content} />
-      }
-    });
+  const messageComps = messages.map((message) => {
+    if(message.type === 'sysMessage') {
+      return <Notification
+      key={message.id}
+      content={message.content} />
+    } else {
+      return <Message
+      key={message.id}
+      username={message.username}
+      content={message.content} />
+    }
+  });
 
-    return (
-      <main className="messages">
-        {messageComps}
-      </main>
-    );
-
+  return (
+    <main className="messages">
+      {messageComps}
+    </main>
+  );
 }
 export default MessageList;
