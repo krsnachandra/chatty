@@ -13,16 +13,23 @@ const server = express()
 
 // Create the WebSockets server
 const wss = new ws.Server({ server });
-let clients = [];
 
+function broadcast(obj) {
+  wss.clients.forEach((client) => {
+    if (client.readyState == ws.OPEN) {
+      client.send(JSON.stringify(obj));
+    }
+  });
+}
 
-// function broadcast(clients, newMessage) {
-//   clients.forEach((client) => {
-//       if (client.readyState == ws.OPEN) {
-//         client.send(JSON.stringify(newMessage));
-//       }
-//     });
-// }
+function sendClientCount() {
+  const numberOfUsers = {
+    id: uuidv1(),
+    content: String(wss.clients.size),
+    type: 'numberOfUsers'
+  };
+  broadcast(numberOfUsers);
+}
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
@@ -30,25 +37,8 @@ let clients = [];
 wss.on('connection', (socket) => {
   console.log('Client connected');
 
-  const id = uuidv1();
 
-  clients.push({id});
-
-  console.log(clients);
-  console.log(clients.length);
-
-  const numberOfUsers = {
-      id,
-      content: String(clients.length),
-      type: 'numberOfUsers'
-    }
-
-  clients.forEach((client) => {
-    if (client.readyState == ws.OPEN) {
-      client.send(JSON.stringify(numberOfUsers));
-    }
-  });
-
+  sendClientCount();
 
   //socket.send('');
   // broadcast(clients, {john:'MORE CLIENTS!', count: clients.length})
@@ -73,19 +63,15 @@ wss.on('connection', (socket) => {
       username: String(parsedMessage.username),
       content: String(parsedMessage.content),
       type: String(parsedMessage.type)
-    }
+    };
     // console.log(newMessage);
-    clients.forEach((client) => {
-      if (client.readyState == ws.OPEN) {
-        client.send(JSON.stringify(newMessage));
-      }
-    });
+    broadcast(newMessage);
 
 
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   socket.on('close', () => {
     console.log('Client disconnected');
-    clients = clients.filter(client => client.id !== id);
+    sendClientCount();
   });
 });
