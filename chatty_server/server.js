@@ -32,19 +32,13 @@ function sendClientCount() {
 }
 
 // Set up a callback that will run when a client connects to the server
-// When a client connects they are assigned a socket, represented by
-// the ws parameter in the callback.
+// When a client connects they are assigned a socket.
 wss.on('connection', (socket) => {
   console.log('Client connected');
 
-
   sendClientCount();
 
-  //socket.send('');
-  // broadcast(clients, {john:'MORE CLIENTS!', count: clients.length})
-
   socket.on('message', function incoming(message) {
-    // console.log('MESSAGE RECIEVED:', message);
     let parsedMessage;
     // making the newMessage more secure
     try{
@@ -64,9 +58,8 @@ wss.on('connection', (socket) => {
       content: String(parsedMessage.content),
       type: String(parsedMessage.type)
     };
-    // console.log(newMessage);
-    broadcast(newMessage);
 
+    broadcast(newMessage);
 
   });
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.

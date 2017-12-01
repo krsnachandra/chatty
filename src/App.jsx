@@ -13,12 +13,11 @@ class App extends Component {
     super(props);
 
     this.socket = null;
-    // this.state = {messages: []};
 
     this.state = {
       currentUser: {name: 'Anonymous'},
       messages: [],
-      onlineUsers: 1
+      onlineUsers: ''
     }
     this.onNewMessage = this.onNewMessage.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -29,15 +28,11 @@ class App extends Component {
     this.socket = new WebSocket('ws://localhost:3001');
     this.socket.addEventListener('message', (msg) => {
       const mess = JSON.parse(msg.data);
-      // console.log(mess);
-      // console.log('type', mess.type);
       if(mess.type !== 'numberOfUsers') {
         const messages = this.state.messages.concat(mess);
         this.setState({messages});
       } else {
-        // const onlineUsers = this.state.onlineUsers.concat(JSON.parse(msg.data));
         this.setState({onlineUsers: mess.content});
-        // console.log(this.state.onlineUsers);
       }
 
     })
@@ -47,7 +42,6 @@ class App extends Component {
   //   console.log('Will Update', this.state, nextState);
   // }
 
-  // receives the content from the input in ChatBar
   onNewMessage(content) {
     const messageObj = {
       username: this.state.currentUser.name,
@@ -56,7 +50,6 @@ class App extends Component {
     }
     this.socket.send(JSON.stringify(messageObj));
   }
-  // when receiving content, add to posts array
 
   onUsernameChange(newUsername) {
     const systemMessage = {
@@ -68,7 +61,6 @@ class App extends Component {
       currentUser: {name: newUsername}
     })
   }
-
 
   render() {
     console.log("Rendering <App/>");
