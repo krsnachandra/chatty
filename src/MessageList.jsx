@@ -6,7 +6,6 @@ import Notification from './Notification.jsx';
 
 // class MessageList extends Component {
 //   render() {
-//     console.log("Rendering <MessageList/>");
 //     const messages = this.props.messages.map((message) => {
 //       if(message.type === 'sysMessage') {
 //         return <Notification
@@ -27,7 +26,6 @@ import Notification from './Notification.jsx';
 //   }
 // }
 function MessageList({messages}){
-    console.log("Rendering <MessageList/>");
     const messageComps = messages.map((message) => {
       if(message.type === 'sysMessage') {
         return <Notification
@@ -43,7 +41,7 @@ function MessageList({messages}){
 
     return (
       <main className="messages">
-        { messageComps }
+        {messageComps}
       </main>
     );
 

@@ -63,7 +63,6 @@ class App extends Component {
   }
 
   render() {
-    console.log("Rendering <App/>");
     return (
       <div>
         <Nav onlineUsers={this.state.onlineUsers}/>

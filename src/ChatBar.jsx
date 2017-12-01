@@ -11,7 +11,6 @@ class ChatBar extends Component {
     }
 
     this.onContent = this.onContent.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
     this.onUsername = this.onUsername.bind(this);
 
   }
@@ -23,7 +22,7 @@ class ChatBar extends Component {
     });
   }
 
-  handleKeyPress = (event) => { // like Karl's onPost
+  handleKeyPress = (event) => {
     if(event.key == 'Enter'){
       this.props.onMessage(this.state.content);
       // now that the content is sent to onNewMessage in App.jsx,
@@ -47,7 +46,6 @@ class ChatBar extends Component {
   }
 
   render() {
-    console.log("Rendering <ChatBar/>");
     return (
       <footer className="chatbar">
         <input
